@@ -1,26 +1,23 @@
 const URL = require("../models/urlModel");
 const cuid = require('cuid');
 
-//generate id
-function generateId(length) {
-    return cuid().slice(0, length);
-}
-
 async function shortUrlGenerator(req,res) {
     const body = req.body;
     if(!body.url){
         return res.status(400).json({error: "URL is required"});
     }
-    const shortId = generateId(2);
+    const shortId = Date.now();
     await URL.create({
         shortId: shortId,
         redirectUrl : body.url,
         visitHistory:[],
+        createdBy : req.user._id,         
     });
 
-    return res.json({id : shortId});
+    return res.render("generateShortUrl",{id:shortId});
 };
 
+//this is just for postman to check analytics --> no frontend is attached here
 async function handleAnalytics(req,res){
     const shortId = req.params.shortId;
     console.log("short id : ",shortId);
@@ -34,10 +31,26 @@ async function handleAnalytics(req,res){
         shortId : result.shortId,
         newUrl : `http://localhost:3000/url/${result.shortId}`
     });
-
 }
 
+// using this controller i'm able to use the short url that i have generated
+async function useShortUrl(req,res){
+    const shortId = req.params.shortId;
+        const entry = await URL.findOneAndUpdate(
+            { shortId },
+            {
+                $push: {
+                    visitHistory: {
+                        timestamp: Date.now(),
+                    },
+                },
+            },
+            { new: true }  // Return the updated document
+        );
+        res.redirect(entry.redirectUrl);
+}
 module.exports = {
     shortUrlGenerator,
-    handleAnalytics
+    handleAnalytics,
+    useShortUrl
 };

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>All Data</title>
+    <style>
+      body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #e8eff1;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        flex-direction: column;
+      }
+      .container {
+        max-width: 900px;
+        width: 90%;
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+      h1 {
+        color: #2c3e50;
+        margin-bottom: 24px;
+      }
+      table {
+        width: 100%;
+        margin: 20px 0;
+        border-collapse: collapse;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      th, td {
+        padding: 16px 20px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+      th {
+        background-color: #f8f9fa;
+        color: #333;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      tr:hover {
+        background-color: #f1f1f1;
+      }
+      td a {
+        color: #007bff;
+        text-decoration: none;
+        font-weight: 500;
+      }
+      td a:hover {
+        text-decoration: underline;
+      }
+      button {
+        padding: 10px 16px;
+        font-size: 14px;
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+      button:hover {
+        background-color: #c82333;
+      }
+      .generate-btn {
+        margin-top: 30px;
+        display: inline-block;
+        padding: 14px 28px;
+        font-size: 16px;
+        background-color: #28a745;
+        border-radius: 8px;
+        text-decoration: none;
+        color: white;
+        transition: background-color 0.3s ease;
+      }
+      .generate-btn:hover {
+        background-color: #218838;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>All Shortened URLs</h1>
+      <table>
+        <thead>
+          <tr>
+            <th>S No.</th>
+            <th>Original URL</th>
+            <th>Short URL</th>
+            <th>Total Clicks</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% allUrl.forEach((url, index) => { %>
+          <tr>
+            <td><%= index + 1 %></td>
+            <td>
+              <a href="<%= url.redirectUrl %>" target="_blank">
+                <%= url.redirectUrl %>
+              </a>
+            </td>
+            <td>
+              <a href="<%= `http://localhost:3000/url/${url.shortId}` %>" target="_blank">
+                <%= `http://localhost:3000/url/${url.shortId}` %>
+              </a>
+            </td>
+            <td><%= url.visitHistory.length %></td>
+            <td>
+              <form action="/url/delete/<%= url.shortId %>" method="post" onsubmit="return confirmDelete()">
+                <button type="submit">Delete</button>
+              </form>
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+      <a href="http://localhost:3000/generateShortUrl" class="generate-btn">Generate New Short URL</a>
+    </div>
+
+    <script>
+      function confirmDelete() {
+        return confirm('Are you sure you want to delete this URL?');
+      }
+    </script>
+  </body>
+</html>

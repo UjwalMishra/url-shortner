@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Short URL</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #e8eff1;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            max-width: 500px;
+            background-color: #ffffff;
+            padding: 40px 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 24px;
+        }
+        label {
+            display: block;
+            font-size: 16px;
+            margin-bottom: 12px;
+            color: #34495e;
+            text-align: left;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            margin-bottom: 24px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+        input[type="text"]:focus {
+            border-color: #007bff;
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 16px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .short-url {
+            margin-top: 30px;
+        }
+        .short-url p {
+            font-size: 18px;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        .short-url a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .short-url a:hover {
+            text-decoration: underline;
+        }
+        .error {
+            color: #e74c3c;
+            margin-top: 20px;
+        }
+        .home-btn {
+            margin-top: 30px;
+            display: inline-block;
+            width: 100%;
+            background-color: #28a745;
+        }
+        .home-btn:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Generate Short URL</h1>
+        <form method="POST" action="/url">
+            <label for="url">Enter Your URL</label>
+            <input 
+                type="text" 
+                name="url" 
+                id="url" 
+                placeholder="https://example.com" 
+                required>
+            <button type="submit">Generate Short URL</button>
+        </form>
+
+        <% if (locals.id) { %>
+        <div class="short-url">
+            <p>Your short URL:</p>
+            <a href="<%= `http://localhost:3000/url/${id}` %>" target="_blank">
+                <%= `http://localhost:3000/url/${id}` %>
+            </a>
+        </div>
+        <% } %>
+
+        <% if (locals.error) { %>
+        <div class="error">
+            <p><%= locals.error %></p>
+        </div>
+        <% } %>
+
+        <a href="http://localhost:3000/home">
+            <button class="home-btn">Go to Home</button>
+        </a>
+    </div>
+</body>
+</html>
