@@ -21,16 +21,13 @@ async function userLoginController(req,res) {
     if(!user){
         return res.render("login",{
             error: "Invalid Username or Password"
-        });
+        }); 
     }
 
-    // this is stateful login method :-
-    //generate uuid
-    const sessionId = uuidv4();
-    //map user and sessionId
-    setUser(sessionId,user);
+    // stateless login
+    const token = setUser(user);
     //generate a cookie in res
-    res.cookie("uid",sessionId);
+    res.cookie("uid",token);
     return res.redirect("/home");
 
     //try login using stateless --> using jwt
